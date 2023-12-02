@@ -48,56 +48,66 @@ func calibrate_line(s string) (int, error) {
         return 0, nil
     }
     first := find_first(s)
-    last := find_first(flip(s))
+    last := find_last(s)
     return strconv.Atoi(string(first) + string(last))
 }
 
 func find_first(s string) byte {
     for i := 0; i < len(s); i++ {
-        if s[i] >= '1' && s[i] <= '9' {
-            return s[i]
-        }
-
-        if i < len(s) - 5 {
-            num := s[i:i+5]
-            if num == "three" || num == "eerht" {
-                return '3'
-            } else if num == "seven" || num == "neves" {
-                return '7'
-            } else if num == "eight" || num == "thgie" {
-                return '8'
-            }
-        }
-
-        if i < len(s) - 4 {
-            num := s[i:i+4]
-            if num == "four" || num == "ruof" {
-                return '4'
-            } else if num == "five" || num == "evif" {
-                return '5'
-            } else if num == "nine" || num == "enin" {
-                return '9'
-            }
-        }
-
-        if i < len(s) - 3 {
-            num := s[i:i+3]
-            if num == "one" || num == "eno" {
-                return '1'
-            } else if num == "two" || num == "owt" {
-                return '2'
-            } else if num == "six" || num == "xis" {
-                return '6'
-            }
+        num := find_num(s[i:])
+        if num != '0' {
+            return num
         }
     }
     return 0
 }
 
-func flip(s string) string {
-    runes := []rune(s)
-    for i, j := 0, len(runes) - 1; i < j; i, j = i + 1, j - 1 {
-        runes[i], runes[j] = runes[j], runes[i]
+func find_last(s string) byte {
+    for i := len(s) - 1; i >= 0; i-- {
+        num := find_num(s[i:])
+        if num != '0' {
+            return num
+        }
     }
-    return string(runes)
+    return 0
+}
+
+func find_num(num string) byte {
+    if num[0] >= '1' && num[0] <= '9' {
+        return num[0]
+    }
+
+    if len(num) >= 5 {
+        slice := num[0:5]
+        if slice == "three" {
+            return '3'
+        } else if slice == "seven" {
+            return '7'
+        } else if slice == "eight" {
+            return '8'
+        }
+    }
+
+    if len(num) >= 4 {
+        slice := num[0:4]
+        if slice == "four" {
+            return '4'
+        } else if slice == "five" {
+            return '5'
+        } else if slice == "nine" {
+            return '9'
+        }
+    }
+
+    if len(num) >= 3 {
+        slice := num[0:3]
+        if slice == "one" {
+            return '1'
+        } else if slice == "two" {
+            return '2'
+        } else if slice == "six" {
+            return '6'
+        }
+    }
+    return '0'
 }
